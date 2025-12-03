@@ -19,6 +19,11 @@ const leadSchema = new mongoose.Schema({
     enum: ['New', 'Engaged', 'Proposal Sent', 'Closed-Won', 'Closed-Lost'],
     default: 'New'
   },
+   user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+  },
   createdAt: {
     type: Date,
     default: Date.now

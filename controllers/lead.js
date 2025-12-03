@@ -1,37 +1,72 @@
 const Lead = require('../models/lead');
 
 // Get all leads
+// exports.getLeads = async (req, res) => {
+//   try {
+//     const leads = await Lead.find().sort({ createdAt: -1 });
+//     res.json(leads);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
 exports.getLeads = async (req, res) => {
   try {
-    const leads = await Lead.find().sort({ createdAt: -1 });
+    const leads = await Lead.find({ user: req.user.id }).sort({ createdAt: -1 });
     res.json(leads);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
+
 // Add a new lead
+// exports.createLead = async (req, res) => {
+//   try {
+//     const { name, email, status } = req.body;
+
+//     // Check if email already exists
+//     const existingLead = await Lead.findOne({ email });
+//     if (existingLead) {
+//       return res.status(400).json({ error: 'Email already exists' });
+//     }
+
+//     const lead = new Lead({ name, email, status });
+//     await lead.save();
+
+//     res.status(201).json(lead);
+//   } catch (error) {
+//     if (error.code === 11000) {
+//       return res.status(400).json({ error: 'Email already exists' });
+//     }
+//     res.status(400).json({ error: error.message });
+//   }
+// };
+
 exports.createLead = async (req, res) => {
   try {
     const { name, email, status } = req.body;
 
-    // Check if email already exists
-    const existingLead = await Lead.findOne({ email });
+    const existingLead = await Lead.findOne({ email, user: req.user.id });
     if (existingLead) {
-      return res.status(400).json({ error: 'Email already exists' });
+      return res.status(400).json({ error: "Email already exists for this user" });
     }
 
-    const lead = new Lead({ name, email, status });
+    const lead = new Lead({
+      name,
+      email,
+      status,
+      user: req.user.id
+    });
+
     await lead.save();
 
     res.status(201).json(lead);
   } catch (error) {
-    if (error.code === 11000) {
-      return res.status(400).json({ error: 'Email already exists' });
-    }
     res.status(400).json({ error: error.message });
   }
 };
+
 
 // Get a specific lead by ID
 exports.getLeadById = async (req, res) => {
