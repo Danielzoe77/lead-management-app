@@ -10,7 +10,7 @@ connectDB(); // Connect to MongoDB
 
 // Allow CORS
 app.use(cors({
-  origin: ["http://localhost:3000","http://192.168.52.126:3000"],
+  origin: ["https://lead-management-web-zeta.vercel.app/", "http://localhost:3000","http://192.168.52.126:3000"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
